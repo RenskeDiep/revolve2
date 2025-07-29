@@ -178,10 +178,13 @@ def main(config: Config, folder_name: str = "stats") -> None:
 
                         if mate_selection.mate_decision(
                             config.MATE_SELECTION_STRATEGY,
+                            config.SIMILARITY_THRES_MIN, 
+                            config.SIMILARITY_THRES_MAX,
                             uuid_to_individual[r1_uuid],
                             uuid_to_individual[r2_uuid],
                             population,
                             config.MATE_SELECTION_THRESHOLD,
+                            config.MATE_SELECTION_THRESHOLD,   
                         ):
                             logging.info("YAY mating!")
 
