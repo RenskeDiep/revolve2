@@ -88,6 +88,9 @@ class Config:
         self.MATING_THRESHOLD = self._config_data["mating_threshold"]
         self.MATING_COOLDOWN = self._config_data["mating_cooldown"]
 
+        self.SIMILARITY_THRES_MIN = self._config_data["similarity_thres_min"]
+        self.SIMILARITY_THRES_MAX = self._config_data["similarity_thres_max"]
+
         # Death mechanism settings (convert string enum to actual enum)
         self.DEATH_MECHANISM = DeathMechanism[self._config_data["death_mechanism"]]
 
