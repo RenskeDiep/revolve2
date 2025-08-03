@@ -9,9 +9,9 @@ from project2.individual import Individual
 
 
 from revolve2.experimentation.logging import setup_logging
-from revolve2.experimentation.rng import make_rng_time_seed
+from revolve2.experimentation.rng import make_rng, make_rng_time_seed2
 from project2.stats import Statistics
-from project_2.project2.incubator import Incubator
+from project2.incubator import Incubator
 
 
 from .robot_evolution import ModularRobotEvolution
@@ -29,7 +29,7 @@ def run_standard_setup(
     setup_logging(file_name="log.txt")
 
     # Set up the random number generator.
-    rng = make_rng_time_seed()
+    rng, seed = make_rng_time_seed2()
 
     # CPPN innovation databases.
     # If you don't understand CPPN, just know that a single database is shared in the whole evolutionary process.
@@ -77,7 +77,7 @@ def run_standard_setup(
         training_budget=config.INCUBATOR_TRAINING_BUDGET,
         innov_db_body=innov_db_body,
         innov_db_brain=innov_db_brain,
-        rng=rng,
+        rng=make_rng(1754174736443226),
         num_simulators=config.NUM_SIMULATORS,
     ).incubate()
 
@@ -106,6 +106,7 @@ def run_standard_setup(
     generation_index = 0
 
     stats = Statistics(stats_folder)
+    stats.save_seed(seed)
 
     # Start the actual optimization process.
     logging.info("Start optimization process.")
