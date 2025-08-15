@@ -16,6 +16,7 @@ from revolve2.modular_robot_simulation import ModularRobotScene, simulate_scenes
 from revolve2.simulation.scene import Pose
 from revolve2.standards import terrains
 from revolve2.standards.simulation_parameters import make_standard_batch_parameters
+from project2.utils.helpers import similarity_score
 from itertools import combinations
 
 # from revolve2.standards.mate_selection import Reproducer
@@ -30,12 +31,27 @@ from project2.simulation_result import SimulationResult, FitnessFunctionAlgorith
 from project2.stats import Statistics
 import project2.mate_selection as mate_selection
 from project2.death_mechanism import apply_death_mechanism
+from revolve2.standards.morphological_measures import MorphologicalMeasures
+import numpy as np
+from collections import defaultdict
+from project2.utils.helpers import save_dict_to_json
 
 
 def main(config: Config, folder_name: str = "stats") -> None:
     """Run the simulation."""
     # Set up logging.
     setup_logging()
+    meeting = 0
+    mating = 0
+    similarity_scores = defaultdict(list)
+    individual_count = defaultdict(list)
+    fitness = defaultdict(list)
+    novelty_child_population = defaultdict(list)
+    novelty_child_parents = defaultdict(list)
+    coordinates_per_gen = defaultdict(list)
+    measures = defaultdict(list)
+    uuid_to_measures = defaultdict(list)
+    gen_to_robots = defaultdict(list)
 
     stats = Statistics(folder_name=folder_name)
 
@@ -63,6 +79,18 @@ def main(config: Config, folder_name: str = "stats") -> None:
         robot = ind.develop(config.VISUALIZE_MAP)
         uuid_to_robot[ind.get_robot_uuid()] = robot
         uuid_to_individual[ind.get_robot_uuid()] = ind
+        measures1 = MorphologicalMeasures(robot.body)
+        v1 = np.array([
+                measures1.num_modules,
+                measures1.num_bricks,
+                measures1.branching,
+                measures1.limbs,
+                measures1.length_of_limbs,
+                measures1.coverage,
+                measures1.symmetry,
+            ], dtype=float)
+        uuid_to_measures[str(robot.uuid)].append(v1.tolist())
+
 
     # Now we can create a scene and add the robots by mapping the genotypes to phenotypes
     scene = ModularRobotScene(terrain=terrains.flat(Vector2([plane_size, plane_size])))
@@ -73,7 +101,7 @@ def main(config: Config, folder_name: str = "stats") -> None:
         pos = get_random_free_position(config.LIMITS, initial_positions)
         scene.add_robot(robot, pose=Pose(pos))
         initial_positions.append(pos)
-
+        
     simulation_results = []
     # Create the simulator.
     simulator = initialize_local_simulator(
@@ -82,6 +110,7 @@ def main(config: Config, folder_name: str = "stats") -> None:
     met_before: dict[tuple, int] = {}
 
     for generation in range(config.ITERATIONS):
+
         logging.info(f"Starting generation {generation}.")
         simulation_result_list = simulate_scenes(
             simulator=simulator,
@@ -145,6 +174,25 @@ def main(config: Config, folder_name: str = "stats") -> None:
                 .position
             )
             final_coordinates.append((xyz.x, xyz.y, xyz.z))
+            coordinates_per_gen[generation].append((xyz.x, xyz.y, xyz.z, str(robot.uuid)))
+
+        
+        #if generation % 5 == 0:
+        #    sim_score_list = []
+        #    for robot1 in current_robots:
+        #        for robot2 in current_robots:
+        #            if robot1.uuid != robot2.uuid: 
+        #                individual1 = uuid_to_individual[robot1.uuid]
+        #                individual2 = uuid_to_individual[robot2.uuid]
+        #                sim_score = similarity_score(individual1, individual2)
+        #                sim_score_list.append(sim_score)
+
+        #    similarity_scores[generation] = sim_score_list
+
+        individual_count[generation] = len(current_robots)
+
+        for robot in current_robots:
+            gen_to_robots[generation].append(str(robot.uuid))
 
         logging.info(f"coordinates length: {len(coordinates)}")
         logging.info(f"existing_robots length: {len(existing_robots)}")
@@ -159,6 +207,8 @@ def main(config: Config, folder_name: str = "stats") -> None:
             j,
             (x2, y2, z2, robot2, state_id2),
         ) in combinations(enumerate(coordinates), 2):
+            individual1 = uuid_to_individual[robot1.uuid]
+            individual2 = uuid_to_individual[robot2.uuid]
             if robot1 != robot2 and state_id1 == state_id2:
                 distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
                 if distance <= config.MATING_THRESHOLD:
@@ -175,26 +225,26 @@ def main(config: Config, folder_name: str = "stats") -> None:
                         logging.info(
                             f"Meeting: Robots {i} and {j} - Distance: {distance:.3f}"
                         )
-
+                        meeting += 1
                         if mate_selection.mate_decision(
                             config.MATE_SELECTION_STRATEGY,
                             config.SIMILARITY_THRES_MIN, 
                             config.SIMILARITY_THRES_MAX,
-                            uuid_to_individual[r1_uuid],
-                            uuid_to_individual[r2_uuid],
+                            individual1,
+                            individual2,
                             population,
-                            config.MATE_SELECTION_THRESHOLD,
-                            config.MATE_SELECTION_THRESHOLD,   
+                            config.MATE_SELECTION_THRESHOLD,  
                         ):
                             logging.info("YAY mating!")
+                            mating += 1
 
                             # Increment offspring count for both parents
                             stats.increment_offspring_count(r1_uuid)
                             stats.increment_offspring_count(r2_uuid)
 
                             offspring = reproduce_individual(
-                                uuid_to_individual[r1_uuid],
-                                uuid_to_individual[r2_uuid],
+                                individual1,
+                                individual2,
                                 rng,
                                 innov_db_body,
                                 innov_db_brain,
@@ -204,6 +254,34 @@ def main(config: Config, folder_name: str = "stats") -> None:
                             population.append(offspring)
                             uuid_to_individual[offspring_robot.uuid] = offspring
                             uuid_to_robot[offspring_robot.uuid] = offspring_robot
+                            measures1 = MorphologicalMeasures(offspring_robot.body)
+                            v1 = np.array([
+                            measures1.num_modules,
+                            measures1.num_bricks,
+                            measures1.branching,
+                            measures1.limbs,
+                            measures1.length_of_limbs,
+                            measures1.coverage,
+                            measures1.symmetry,
+                            ], dtype=float)
+                            uuid_to_measures[str(offspring_robot.uuid)].append(v1.tolist())
+
+
+                            sim_offspring = uuid_to_individual[offspring_robot.uuid]
+                            for robot2 in current_robots:
+                                sim2 = uuid_to_individual[robot2.uuid]
+                                nov_score = similarity_score(sim_offspring, sim2)
+                                novelty_child_population[str(offspring_robot.uuid)].append((str(robot2.uuid), nov_score, generation))
+
+                            parent_score1 = similarity_score(sim_offspring, individual1)
+                            parent_score2 = similarity_score(sim_offspring, individual2)
+                            novelty_child_parents[str(offspring_robot.uuid)].append((parent_score1, parent_score2, generation))
+
+        with open("C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/extra.txt", "a") as f:
+            f.write("Generation: " + str(generation) + "\n")
+            f.write("Mating: " + str(mating) + "\n")
+            f.write("Meeting: " + str(meeting) + "\n")
+            f.write("Individual count: " + str(individual_count) + "\n")
 
         # Apply death mechanism based on configuration
         dead_individuals = apply_death_mechanism(
@@ -237,6 +315,24 @@ def main(config: Config, folder_name: str = "stats") -> None:
                     ind.develop(config.VISUALIZE_MAP), pose=Pose(random_position)
                 )
                 existing_positions.append(random_position)
+        #print(similarity_scores)
+    #print("Final similarity scores", similarity_scores)
+    #print("Mating: ", mating)
+    #print("Meeting: ", meeting)
+    #print("Individual count: ", individual_count)
+    #print("nov_child population", novelty_child_population)
+    #print("nov_child_parents", novelty_child_parents)
+    #print("Coordinates per generation", coordinates_per_gen)
+    #print("Measures", measures)
+    # Example
+    #save_dict_to_json(similarity_scores, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 1/similarity.json")
+    save_dict_to_json(novelty_child_population, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/child_population.json")
+    save_dict_to_json(novelty_child_parents, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/child_parents.json")
+    save_dict_to_json(coordinates_per_gen, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/coordinates.json")
+    #save_dict_to_json(measures, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 1/measures.json")
+    save_dict_to_json(uuid_to_measures, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/uuid_to_measures.json")
+    save_dict_to_json(gen_to_robots, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/gen_to_robots.json")
+    
 
 
 if __name__ == "__main__":
@@ -257,7 +353,7 @@ if __name__ == "__main__":
         "--config",
         type=str,
         choices=available_configs,
-        default="config1"
+        default="old/config1"
         if "config1" in available_configs
         else (available_configs[0] if available_configs else "config1"),
         help=f"Config name to use. Available configs: {', '.join(available_configs)}",

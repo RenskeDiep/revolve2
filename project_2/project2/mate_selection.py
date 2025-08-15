@@ -10,6 +10,7 @@ import multineat
 
 from revolve2.experimentation.evolution.abstract_elements import Reproducer
 from revolve2.experimentation.rng import make_rng_time_seed
+from project2.utils.helpers import similarity_score
 
 
 class MateSelectionStrategy(Enum):
@@ -18,30 +19,6 @@ class MateSelectionStrategy(Enum):
     MAX_FITNESS = 3
     MORPHOLOGY = 4
 
-def similarity_score(
-    v1, # vector of morphological measures robot 1
-    v2, # vector of morphological measures robot 2
-    normalize=True,
-    method='euclidean'
-) -> float:
- 
-    if normalize:
-        max_vals = np.maximum(v1, v2)
-        max_vals[max_vals == 0] = 1.0  # avoid divide-by-zero
-        v1 /= max_vals
-        v2 /= max_vals
-
-    if method == 'euclidean':
-        euclidean = np.linalg.norm(v1 - v2)
-        max_dist = np.sqrt(len(v1))  # Max possible distance in normalized space
-        return 1 - (euclidean / max_dist)
-    elif method == 'cosine':
-        dot = np.dot(v1, v2)
-        norm_product = np.linalg.norm(v1) * np.linalg.norm(v2)
-        return 1 - (dot / norm_product if norm_product != 0 else 0.0)
-    else:
-        raise ValueError(f"Unknown method: {method}")
-    
 
 def mate_decision(
     strategy: MateSelectionStrategy,
@@ -82,31 +59,7 @@ def mate_decision(
         return individual2.fitness >= top_50_threshold
     
     elif strategy == MateSelectionStrategy.MORPHOLOGY:
-        print("TEST")
-        measures1 = MorphologicalMeasures(individual1.robot.body)
-        v1 = np.array([
-        measures1.num_modules,
-        measures1.num_bricks,
-        measures1.branching,
-        measures1.limbs,
-        measures1.length_of_limbs,
-        measures1.coverage,
-        measures1.proportion_2d if measures1.is_2d else 0.0,
-        measures1.symmetry,
-    ], dtype=float)
-        measures2 = MorphologicalMeasures(individual2.robot.body)
-        v2 = np.array([
-        measures2.num_modules,
-        measures2.num_bricks,
-        measures2.branching,
-        measures2.limbs,
-        measures2.length_of_limbs,
-        measures2.coverage,
-        measures2.proportion_2d if measures2.is_2d else 0.0,
-        measures2.symmetry,
-    ], dtype=float)
-        print(v1, v2)
-        sim_score = similarity_score(v1, v2)
+        sim_score = similarity_score(individual1, individual2)
         print(sim_score)
         if  sim_score >= similarity_thres_min and sim_score <= similarity_thres_max:
             print("YESSS")

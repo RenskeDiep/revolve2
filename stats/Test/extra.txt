@@ -1,0 +1,3 @@
+Mating: 1
+Meeting: 1
+Individual count: defaultdict(<class 'list'>, {0: 5})

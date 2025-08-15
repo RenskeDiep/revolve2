@@ -88,5 +88,5 @@ class Statistics:
             "generation_to_population_size": self.generation_to_population_size,
             "robot_stats": self.robot_stats,
         }
-        with open(self.folder_path / f"stats_{postfix}.json", "w+") as f:
+        with open("C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/stats.json", "w+") as f:
             json.dump(data, f, indent=4)
