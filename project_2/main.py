@@ -277,7 +277,7 @@ def main(config: Config, folder_name: str = "stats") -> None:
                             parent_score2 = similarity_score(sim_offspring, individual2)
                             novelty_child_parents[str(offspring_robot.uuid)].append((parent_score1, parent_score2, generation))
 
-        with open("C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/extra.txt", "a") as f:
+        with open("C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_065-1/run 1/extra.txt", "a") as f:
             f.write("Generation: " + str(generation) + "\n")
             f.write("Mating: " + str(mating) + "\n")
             f.write("Meeting: " + str(meeting) + "\n")
@@ -326,12 +326,12 @@ def main(config: Config, folder_name: str = "stats") -> None:
     #print("Measures", measures)
     # Example
     #save_dict_to_json(similarity_scores, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 1/similarity.json")
-    save_dict_to_json(novelty_child_population, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/child_population.json")
-    save_dict_to_json(novelty_child_parents, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/child_parents.json")
-    save_dict_to_json(coordinates_per_gen, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/coordinates.json")
+    save_dict_to_json(novelty_child_population, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_065-1/run 1/child_population.json")
+    save_dict_to_json(novelty_child_parents, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_065-1/run 1/child_parents.json")
+    save_dict_to_json(coordinates_per_gen, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_065-1/run 1/coordinates.json")
     #save_dict_to_json(measures, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 1/measures.json")
-    save_dict_to_json(uuid_to_measures, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/uuid_to_measures.json")
-    save_dict_to_json(gen_to_robots, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_045-065/run 1/gen_to_robots.json")
+    save_dict_to_json(uuid_to_measures, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_065-1/run 1/uuid_to_measures.json")
+    save_dict_to_json(gen_to_robots, "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_065-1/run 1/gen_to_robots.json")
     
 
 
