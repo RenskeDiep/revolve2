@@ -88,5 +88,5 @@ class Statistics:
             "generation_to_population_size": self.generation_to_population_size,
             "robot_stats": self.robot_stats,
         }
-        with open("C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_065-1/run 1/stats.json", "w+") as f:
+        with open("C:/Users/rensk/Documents/Amsterdam/revolve2/stats/standard_setup_k2/run 1/stats.json", "w+") as f:
             json.dump(data, f, indent=4)

@@ -14,13 +14,13 @@ import itertools
 
 similarity_scores = defaultdict(lambda: {"sim_scores": []})
 
-filename = "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 6/gen_to_robots.json."
+filename = "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 8/gen_to_robots.json."
 with open(filename, "r") as f:
     gen_to_robot = json.load(f)
     gen_to_robot = gen_to_robot
     
     
-filename = "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 6/uuid_to_measures.json."
+filename = "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/run 8/uuid_to_measures.json."
 with open(filename, "r") as f:
     robot_to_measures = json.load(f)
     
@@ -61,7 +61,7 @@ for gen in gen_to_robot:
             
 
 filename = "C:/Users/rensk/Documents/Amsterdam/revolve2/stats/morph_0-045/similarity_dict.json."
-experiment_id = 6
+experiment_id = 8
 
 if not os.path.exists(filename):
     with open(filename, "w") as f:

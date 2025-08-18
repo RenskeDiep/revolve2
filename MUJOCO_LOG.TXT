@@ -1,3 +1,12 @@
 Sat Mar 29 00:09:59 2025
 ERROR: mjv_updateSceneState: m->nu changed
 
+Mon Aug 18 11:23:21 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Mon Aug 18 19:48:29 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Mon Aug 18 19:49:34 2025
+ERROR: mjv_updateSceneState: m->nu changed
+

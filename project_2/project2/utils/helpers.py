@@ -98,7 +98,7 @@ def similarity_score(individual1, individual2, normalize=True,
     
 
 def save_dict_to_json(data_dict, filename="data.json"):
-    with open(filename, "w") as f:
+    with open(filename, "w+") as f:
         json.dump(data_dict, f, indent=4)
 
 

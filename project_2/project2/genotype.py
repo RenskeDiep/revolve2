@@ -79,6 +79,7 @@ class Genotype(BodyGenotypeV2, BrainGenotypeCpg):
         """
         Perform crossover between two genotypes.
 
+
         :param parent1: The first genotype.
         :param parent2: The second genotype.
         :param rng: Random number generator.
