@@ -70,6 +70,10 @@ ax1.set_xlabel("Generation")
 ax1.set_ylabel("Percentage (%)", color="green")
 ax2.set_ylabel("Number", color="black")
 
+ax1.set_xlim(0, 100)      # set x-axis min/max
+ax1.set_ylim(0, 60)
+ax2.set_xlim(0, 100)
+ax2.set_ylim(0, 350)
 # Combine legends
 lines1, labels1 = ax1.get_legend_handles_labels()
 lines2, labels2 = ax2.get_legend_handles_labels()

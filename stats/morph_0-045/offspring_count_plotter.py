@@ -33,8 +33,10 @@ y_vals = [y for _, y in sorted_offspring]
 # Plot
 plt.figure(figsize=(10, 6))
 plt.bar(x_vals, y_vals, color='skyblue')
+plt.xlim(0, 35)   # x-axis range from 0 to 12
+plt.ylim(0,700) 
 plt.xlabel("Number of Offspring")
 plt.ylabel("Counts")
 plt.title("Distribution of Offspring Counts, 0.0-0.45")
-plt.xticks(range(max(x_vals)+1))  # show each number
+#plt.xticks(range(max(x_vals)+1))  # show each number
 plt.show()

@@ -73,6 +73,7 @@ plt.figure(figsize=(8, 6))
 plt.scatter(parents1, parents2, color='blue', alpha=0.6)  # alpha makes points a bit transparent
 plt.xlabel("Parents 1")
 plt.ylabel("Parents 2")
+plt.ylim(0,1)
 plt.title("Similarity of New Offspring to Parents, 0.45-0.65")
 plt.grid(True)
 plt.show()

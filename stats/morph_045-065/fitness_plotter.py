@@ -54,6 +54,8 @@ for gen in generations:
     max_fitness.append(np.max(fitness))
     std_fitness.append(np.std(fitness))
 
+print(avg_fitness[-1])
+print(std_fitness[-1])
 # Convert generations to x-axis numbers for plotting
 x = range(len(generations))
 
@@ -77,6 +79,10 @@ ax2.plot(x, max_fitness, color='green', label='Maximum Fitness', linewidth=1)
 ax2.set_ylabel("Maximum Fitness", color='green')
 ax2.tick_params(axis='y', labelcolor='green')
 ax2.set_ylim(bottom=0)
+ax1.set_xlim(0, 100)      # set x-axis min/max
+ax1.set_ylim(0, 12)
+ax2.set_xlim(0, 100)
+ax2.set_ylim(0, 120)
 
 # Combine legends from both axes
 lines, labels = ax1.get_legend_handles_labels()

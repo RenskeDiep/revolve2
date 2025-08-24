@@ -35,16 +35,17 @@ for g in generations:
     min_values_per_gen.append(min_gen)
 
 # Compute overall statistics
-overall_avg = [np.mean(v) for v in avg_values_per_gen]
-overall_max = [np.max(v) for v in max_values_per_gen]
-overall_min = [np.min(v) for v in min_values_per_gen]
-overall_std = [np.std(v) for v in avg_values_per_gen]
+overall_avg = [np.mean([1 - v for v in gen_vals]) for gen_vals in avg_values_per_gen]
+overall_min = [np.min([1 - v for v in gen_vals]) for gen_vals in max_values_per_gen]
+overall_max = [np.max([1 - v for v in gen_vals]) for gen_vals in min_values_per_gen]
+overall_std = [np.std([1 - v for v in gen_vals]) for gen_vals in avg_values_per_gen]
+
 
 # Plot
 plt.figure(figsize=(10,6))
 
 for exp in all_experiments:
-    exp_values = [all_experiments[exp][str(gen)]["avg"] for gen in generations]
+    exp_values = [1 - all_experiments[exp][str(gen)]["avg"] for gen in generations]
     plt.plot(x, exp_values, color='gray', alpha=0.3)
 
 plt.plot(generations, overall_avg, color='blue', label='Average')

@@ -36,26 +36,34 @@ gens = sorted(avg_per_gen[metrics[0]].keys())
 fig, ax1 = plt.subplots(figsize=(12,7))
 ax2 = ax1.twinx()
 
+
 for metric in metrics:
-    if metric != "symmetry_score":
+    if metric != "modules" and metric != "bricks" and metric != "symmetry_score":
         y = [avg_per_gen[metric][g] for g in gens]
         y_std = [std_per_gen[metric][g] for g in gens]
         ax1.plot(gens, y, label=metric)
         ax1.fill_between(gens, np.array(y)-np.array(y_std), np.array(y)+np.array(y_std), alpha=0.2)
-    if metric == "symmetry_score":
+    if metric == "modules" or metric == "bricks":
+        if metric == "modules":
+            color = 'purple'
+        else: 
+            color = 'yellow'
         y = [avg_per_gen[metric][g] for g in gens]
         y_std = [std_per_gen[metric][g] for g in gens]
-        ax2.plot(gens, y, label=metric, color="pink")
-        ax2.fill_between(gens, np.array(y)-np.array(y_std), np.array(y)+np.array(y_std),color="pink", alpha=0.2)
+        ax2.plot(gens, y, label=metric, color=color)
+        ax2.fill_between(gens, np.array(y)-np.array(y_std), np.array(y)+np.array(y_std),color=color, alpha=0.2)
 
 ax1.set_xlabel("Generation")
 ax1.set_ylabel("Average metric ± std")
 ax1.legend(loc="upper left")
+ax1.set_ylim(0,1)
 
 ax2.set_ylabel("Symmetry ± std")
+ax2.legend(loc="upper right")
+ax2.set_ylim(0,25)
 
 plt.xlabel("Generation")
 plt.ylabel("Average value ± std")
 plt.title("Average Morphology Measures per Generation across experiments, Standard Setup")
-plt.legend()
+#plt.legend()
 plt.show()

@@ -71,9 +71,9 @@ plt.plot(x, avg_ages, color='blue', label='Average Age')
 plt.xticks(x, generations)  # show generation names
 plt.xlabel("Generation")
 plt.ylabel("Age")
+plt.ylim(0,100)
+plt.xlim(0,100)
 plt.title("Age Per Generation, 0.65 - 1.0")
 plt.legend()
-plt.xticks(
-    x[0::5], x[0::5]  # every 5th value
-)
+plt.xticks(   x[0::5], x[0::5])
 plt.show()

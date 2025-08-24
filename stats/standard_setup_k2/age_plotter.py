@@ -71,6 +71,8 @@ plt.plot(x, avg_ages, color='blue', label='Average Age')
 plt.xticks(x, generations)  # show generation names
 plt.xlabel("Generation")
 plt.ylabel("Age")
+plt.xlim(0,100)
+plt.ylim(0,100)
 plt.title("Age Per Generation, Standard Setup")
 plt.legend()
 plt.xticks(

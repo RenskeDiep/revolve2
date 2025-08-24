@@ -75,5 +75,10 @@ lines1, labels1 = ax1.get_legend_handles_labels()
 lines2, labels2 = ax2.get_legend_handles_labels()
 ax1.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
 
+ax1.set_xlim(0, 100)      # set x-axis min/max
+ax1.set_ylim(0, 60)
+ax2.set_xlim(0, 100)
+ax2.set_ylim(0, 350)
+
 plt.title("Average % Matings/Meetings and Number of Meetings and Matings per Generation, 0.0-0.45")
 plt.show()

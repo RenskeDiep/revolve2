@@ -112,14 +112,14 @@ plt.figure(figsize=(8,6))
 plt.scatter(sims_0_045, fitness_0_045, color='blue', label='0.0–0.45')
 
 # Scatter for second group
-plt.scatter(sims_045_065, fitness_045_065, color='red', label='0.45–0.65')
+plt.scatter(sims_045_065, fitness_045_065, color='green', label='0.45–0.65')
 
 # Scatter for third group
-plt.scatter(sims_065_1, fitness_065_1, color='green', label='0.65–1.0')
+plt.scatter(sims_065_1, fitness_065_1, color='red', label='0.65–1.0')
 
 
 # Scatter for fourth group
-plt.scatter(sims_stand, fitness_stand, color='yellow', label='standard')
+plt.scatter(sims_stand, fitness_stand, color='purple', label='standard')
 
 
 
@@ -133,19 +133,19 @@ plt.plot(x_range, p(x_range), color='blue', linestyle='--')
 z = np.polyfit(sims_045_065, fitness_045_065, 1)  # linear fit
 p = np.poly1d(z)
 x_range = np.linspace(min(sims_045_065), max(sims_045_065), 100)
-plt.plot(x_range, p(x_range), color='red', linestyle='--')
+plt.plot(x_range, p(x_range), color='green', linestyle='--')
 
 # --- Trendline for 0.65–1.0 ---
 z = np.polyfit(sims_065_1, fitness_065_1, 1)  # linear fit
 p = np.poly1d(z)
 x_range = np.linspace(min(sims_065_1), max(sims_065_1), 100)
-plt.plot(x_range, p(x_range), color='green', linestyle='--')
+plt.plot(x_range, p(x_range), color='red', linestyle='--')
 
 # --- Trendline for standard ---
 z = np.polyfit(sims_stand, fitness_stand, 1)  # linear fit
 p = np.poly1d(z)
 x_range = np.linspace(min(sims_stand), max(sims_stand), 100)
-plt.plot(x_range, p(x_range), color='yellow', linestyle='--')
+plt.plot(x_range, p(x_range), color='purple', linestyle='--')
 
 # Labels and title
 plt.xlabel("Average Similarity")

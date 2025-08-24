@@ -51,16 +51,25 @@ for exp in all_data:
             if fitness <= threshold:
                 plt.scatter(offspring, fitness, color='blue', alpha=0.5)
 coeffs = np.polyfit(x_vals, y_vals, deg=1)  # linear fit
+print(coeffs)
+from scipy.stats import linregress
+result = linregress(x_vals, y_vals)
+
+print("slope:", result.slope)
+print("intercept:", result.intercept)
+print("r-value:", result.rvalue)
+print("p-value:", result.pvalue)
+print("standard error:", result.stderr)
 trendline = np.poly1d(coeffs)
 plt.plot(sorted(x_vals), trendline(sorted(x_vals)), color='black', linewidth=1, label='Trendline degree 1')
-coeffs2 = np.polyfit(x_vals, y_vals, deg=3)  # linear fit
-trendline2 = np.poly1d(coeffs2)
-plt.plot(sorted(x_vals), trendline2(sorted(x_vals)), color='grey', linewidth=1, label='Trendline degree 3')
 
 plt.xlabel("Number of Offspring")
 plt.ylabel("Fitness")
 plt.title("Fitness per Offspring Count, 0.0-0.45")
+
+plt.xlim(0, 110)   # x-axis range from 0 to 12
+plt.ylim(0, 1.6) 
 plt.grid(True)
-plt.xticks(range(max(x_vals)+1))  # show each number
+#plt.xticks(range(max(x_vals)+1))  # show each number
 plt.legend()
 plt.show()

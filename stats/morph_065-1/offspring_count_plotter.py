@@ -35,6 +35,8 @@ plt.figure(figsize=(10, 6))
 plt.bar(x_vals, y_vals, color='skyblue')
 plt.xlabel("Number of Offspring")
 plt.ylabel("Counts")
+plt.ylim(0,700)
+plt.xlim(0,35)
 plt.title("Distribution of Offspring Counts, 0.65-1.0")
 plt.xticks(range(max(x_vals)+1))  # show each number
 plt.show()

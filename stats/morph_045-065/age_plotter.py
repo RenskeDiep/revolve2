@@ -73,7 +73,7 @@ plt.xlabel("Generation")
 plt.ylabel("Age")
 plt.title("Age Per Generation, 0.45 - 0.65")
 plt.legend()
-plt.xticks(
-    x[0::5], x[0::5]  # every 5th value
-)
+plt.xticks(x[0::5], x[0::5])
+plt.ylim(0, 100)
+#plt.xlim(0,100)
 plt.show()

@@ -54,6 +54,8 @@ for gen in generations:
     max_fitness.append(np.max(fitness))
     std_fitness.append(np.std(fitness))
 
+print(avg_fitness[-1])
+print(std_fitness[-1])
 # Convert generations to x-axis numbers for plotting
 x = range(len(generations))
 
@@ -81,7 +83,10 @@ ax2.set_ylim(bottom=0)
 # Combine legends from both axes
 lines, labels = ax1.get_legend_handles_labels()
 lines2, labels2 = ax2.get_legend_handles_labels()
-ax1.legend(lines + lines2, labels + labels2, loc="upper left")
-
+ax1.legend(lines + lines2, labels + labels2, loc="upper left") 
+ax1.set_xlim(0, 100)      # set x-axis min/max
+ax1.set_ylim(0, 12)
+ax2.set_xlim(0, 100)
+ax2.set_ylim(0, 120)  
 plt.title("Fitness per Generation, 0.0-0.45")
 plt.show()
